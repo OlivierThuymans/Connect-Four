@@ -1,8 +1,23 @@
 
-<div class="board">
-  <div *ngFor="let column of columns; let j = index" (click)="columnFunction(j)">
-    <div *ngFor="let lign of ligns; let i = index" (click)="lignFunction(i)" class="box">
-      <div class="circle"></div>
+<main>
+  <div class="board">
+    <div *ngFor="let column of columns; let i = index">
+      <div *ngFor="let lign of ligns; let j = index" class="box">
+        <div [ngClass]="{'colorRed': circleColor(i, j) === 'red', 'colorYellow': circleColor(i, j) === 'yellow', 'circle-default': circleColor(i, j) === 'e'}" (click)="circleData(selectedToken, i, j)"></div>
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="command">
+    <div 
+      class="yellow-token"  
+      (click)="tokenSelection('yellow')"
+      ></div>
+    <div class="chosen-token" [ngStyle]="{'background-color': selectedToken === 'red' ? 'red' : selectedToken === 'yellow' ? 'yellow' : ''}"></div>
+    <div 
+      class="red-token" 
+      (click)="tokenSelection('red')"></div>
+  </div>
+</main>
+
+

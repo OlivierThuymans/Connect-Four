@@ -1,9 +1,15 @@
+main 
+    display: flex
+    align-items: center
+    flex-direction: column
+
 .board
     display: flex
     flex-wrap: wrap
     width: calc(5em * 7)
     height: calc(5em * 6)
     background-color: blue
+    cursor: pointer
     
 .box
     width: 5em
@@ -13,11 +19,58 @@
     justify-content: center
     align-items: center
 
-.circle
+.circle-default
     width: 90%
     height: 90%
     background-color: white
     border-radius: 50px
+
+.command
+    display: flex
+    justify-content: space-evenly
+    align-items: center
+    width: calc(5em * 7)
+    margin-top: 1em
+    height: 5em
+    background-color: grey  
+
+.yellow-token, .red-token
+    width: 3em
+    height: 3em
+    border-radius: 50px
+    cursor: pointer
+
+.yellow-token:hover, .red-token:hover
+    transform: scale(1.2)
+    animation: token-selection .5s linear
+
+    @keyframes token-selection
+        0% 
+            transform: scale(1)
+        100%
+            transform: scale(1.2)
+
+.yellow-token
+    background-color: yellow
+   
+.red-token
+    background-color: red
+
+.chosen-token
+    width: 4em
+    height: 4em
+    background-color: white
+
+.colorRed, .colorYellow
+    width: 90%
+    height: 90%
+    border-radius: 50px
+
+.colorRed
+    background-color: red
+
+.colorYellow
+    background-color: yellow
    
     
     
