@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TokenData } from './interfaces';
+import { Token } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent {
   columns = new Array(7);
 
   addedTokens: TokenData[] = [];
-  //addedYellowTokens: TokenData[] = [];
+  addedRedTokens: TokenData[] = [];
+  addedYellowTokens: TokenData[] = [];
 
   selectedToken: string = '';
   x!: number;
@@ -55,24 +57,66 @@ export class AppComponent {
     return number;
   }
 
+
+  hasWon: boolean;
+
+  checkWinningLigns(column: number, coloredArray: TokenData[]) {
+    let sortedArray = coloredArray.sort(function(a, b) {
+      return a.y - b.y;
+    })
+
+    let wonArray = [];
+
+    sortedArray.map((item, index) => {
+      if(index < sortedArray.length - 1) {
+        if(item.y + 1 === sortedArray[index + 1].y && item.x === sortedArray[index + 1].x) {
+          wonArray.length === 0 ? wonArray.push('x', 'x') : wonArray.push('x');
+          this.hasWon = wonArray.length >= 4;
+        }
+        if(item.y + 1 !== sortedArray[index + 1].y) {
+          wonArray = [];
+        }
+        console.log(wonArray)
+        
+      }
+    })
+
+    
+
+  }
+ 
   circleData(color: string, y: number, x: number) {
 
-    //const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
+    const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
 
     let col = y + 1;
     let lign = x + 1;
 
-    console.log(col, lign)
+    //console.log(col, lign)
     
     this.findX(col);
 
-    if(this.selectedToken !== '') {
+    let entryDoesNotExist = this.addedTokens.find(item => item.color === color && item.y === col && item.x === this.findX(col));
+
+    if(this.selectedToken !== '' && !entryDoesNotExist) {
       this.addedTokens.push({
         color: color,
         y: col,
         x: this.findX(col)
       })
+
+      this.addedRedTokens = this.addedTokens.filter(item => item.color === 'red');
+      this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
+
+      for(let i = 1; i <= 7; i++) {
+        this.checkWinningLigns(i, this.addedRedTokens);
+      }
+      
+
+      console.log(this.addedRedTokens)
     }
+
+
   }
 
   
