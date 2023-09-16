@@ -58,33 +58,37 @@ export class AppComponent {
   }
 
 
-  hasWon: boolean;
+  hasWon: boolean = false;
 
-  checkWinningLigns(column: number, coloredArray: TokenData[]) {
-    let sortedArray = coloredArray.sort(function(a, b) {
+  checkWinningLigns(lign: number, coloredArray: TokenData[]) {
+
+    let sortedArrayFiltered = coloredArray.filter(item => item.x === lign);
+    //console.log(sortedArrayFiltered)
+
+    let sortedArraySorted = sortedArrayFiltered.sort(function(a, b) {
       return a.y - b.y;
     })
 
-    let wonArray = [];
+    let wonLign = [];
 
-    sortedArray.map((item, index) => {
-      if(index < sortedArray.length - 1) {
-        if(item.y + 1 === sortedArray[index + 1].y && item.x === sortedArray[index + 1].x) {
-          wonArray.length === 0 ? wonArray.push('x', 'x') : wonArray.push('x');
-          this.hasWon = wonArray.length >= 4;
+    sortedArraySorted.map((item, index) => {
+      if(index < sortedArraySorted.length - 1) {
+        if(item.y + 1 === sortedArraySorted[index + 1].y && item.x === sortedArraySorted[index + 1].x) {
+          wonLign.length === 0 ? wonLign.push('x', 'x') : wonLign.push('x');
+          this.hasWon = wonLign.length >= 4;
         }
-        if(item.y + 1 !== sortedArray[index + 1].y) {
-          wonArray = [];
+        if(item.y + 1 !== sortedArraySorted[index + 1].y) {
+          wonLign = [];
         }
-        console.log(wonArray)
+        console.log(wonLign)
         
       }
     })
-
-    
-
+    return wonLign;
   }
  
+  winningLign = []
+
   circleData(color: string, y: number, x: number) {
 
     const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
@@ -109,11 +113,19 @@ export class AppComponent {
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
       for(let i = 1; i <= 7; i++) {
-        this.checkWinningLigns(i, this.addedRedTokens);
+        this.checkWinningLigns(i, this.addedRedTokens)
+        // this.winningLign.push(this.checkWinningLigns(i, this.addedRedTokens));
+        // console.log(this.winningLign)
+        // let winningLignFiltered = this.winningLign.filter(item => item.length >= 4);
+        // console.log(winningLignFiltered)
+        // winningLignFiltered.length !== 0 ? this.hasWon = true : this.hasWon = false;
+        
+
+        //console.log(this.checkWinningLigns(i, this.addedRedTokens))
       }
       
 
-      console.log(this.addedRedTokens)
+      //console.log(this.addedRedTokens)
     }
 
 
