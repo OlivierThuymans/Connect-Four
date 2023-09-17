@@ -60,11 +60,14 @@ export class AppComponent {
 
   hasWon: boolean = false;
 
-  checkWinningLigns(lign: number, coloredArray: TokenData[]) {
+  checkWinningLignsColumns(lignCol: number, coloredArray: TokenData[], isLign: boolean) {
 
-    let sortedArrayFiltered = coloredArray.filter(item => item.x === lign);
+    let xToY = isLign ? 'x' : 'y';
+    let yToX = isLign ? 'y' : 'x';
+
+    let sortedArrayFiltered = coloredArray.filter(item => item[xToY] === lignCol);
     let sortedArraySorted = sortedArrayFiltered.sort(function(a, b) {
-      return a.y - b.y;
+      return a[yToX] - b[yToX];
     })
 
     let wonLign = [];
@@ -72,10 +75,10 @@ export class AppComponent {
 
     sortedArraySorted.map((item, index) => {
       if(index < sortedArraySorted.length - 1) {
-        if(item.y + 1 === sortedArraySorted[index + 1].y && item.x === sortedArraySorted[index + 1].x) {
+        if(item[yToX] + 1 === sortedArraySorted[index + 1][yToX] && item[xToY] === sortedArraySorted[index + 1][xToY]) {
           wonLign.length === 0 ? wonLign.push('x', 'x') : wonLign.push('x');
         }
-        if(item.y + 1 !== sortedArraySorted[index + 1].y && wonLign.length < 4) {
+        if(item[yToX] + 1 !== sortedArraySorted[index + 1][yToX] && wonLign.length < 4) {
           wonLign = [];
         }
         result = wonLign.length >= 4
@@ -85,6 +88,7 @@ export class AppComponent {
   };
  
   winningLign = []
+  winningColumn = []
 
   circleData(color: string, y: number, x: number) {
 
@@ -110,10 +114,16 @@ export class AppComponent {
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
       for(let i = 1; i <= 7; i++) {
-       this.winningLign = this.checkWinningLigns(i, this.addedRedTokens)
-       console.log(this.winningLign)
+       this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
+       //console.log(this.winningLign)
        this.winningLign ? this.hasWon = true : false;
       }
+
+      for(let i = 1; i <= 6; i++) {
+        this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
+        //console.log(this.winningLign)
+        this.winningColumn ? this.hasWon = true : false;
+       }
       
 
       //console.log(this.addedRedTokens)
