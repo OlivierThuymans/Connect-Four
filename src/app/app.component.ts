@@ -63,29 +63,26 @@ export class AppComponent {
   checkWinningLigns(lign: number, coloredArray: TokenData[]) {
 
     let sortedArrayFiltered = coloredArray.filter(item => item.x === lign);
-    //console.log(sortedArrayFiltered)
-
     let sortedArraySorted = sortedArrayFiltered.sort(function(a, b) {
       return a.y - b.y;
     })
 
     let wonLign = [];
+    let result;
 
     sortedArraySorted.map((item, index) => {
       if(index < sortedArraySorted.length - 1) {
         if(item.y + 1 === sortedArraySorted[index + 1].y && item.x === sortedArraySorted[index + 1].x) {
           wonLign.length === 0 ? wonLign.push('x', 'x') : wonLign.push('x');
-          this.hasWon = wonLign.length >= 4;
         }
-        if(item.y + 1 !== sortedArraySorted[index + 1].y) {
+        if(item.y + 1 !== sortedArraySorted[index + 1].y && wonLign.length < 4) {
           wonLign = [];
         }
-        console.log(wonLign)
-        
+        result = wonLign.length >= 4
       }
     })
-    return wonLign;
-  }
+    return result;
+  };
  
   winningLign = []
 
@@ -113,15 +110,9 @@ export class AppComponent {
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
       for(let i = 1; i <= 7; i++) {
-        this.checkWinningLigns(i, this.addedRedTokens)
-        // this.winningLign.push(this.checkWinningLigns(i, this.addedRedTokens));
-        // console.log(this.winningLign)
-        // let winningLignFiltered = this.winningLign.filter(item => item.length >= 4);
-        // console.log(winningLignFiltered)
-        // winningLignFiltered.length !== 0 ? this.hasWon = true : this.hasWon = false;
-        
-
-        //console.log(this.checkWinningLigns(i, this.addedRedTokens))
+       this.winningLign = this.checkWinningLigns(i, this.addedRedTokens)
+       console.log(this.winningLign)
+       this.winningLign ? this.hasWon = true : false;
       }
       
 
