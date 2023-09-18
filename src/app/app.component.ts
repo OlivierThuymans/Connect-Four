@@ -59,6 +59,46 @@ export class AppComponent {
 
 
   hasWon: boolean = false;
+  hasWonC: boolean = false;
+
+  checkWinningCrosses(coloredArray: TokenData[], startTarget: TokenData) {
+    let startY = startTarget?.y
+    let startX = startTarget?.x
+    let result: boolean;
+
+    let found1 = coloredArray.find(item => {
+      return item.y === startY + 1 && item.x === startX - 1;
+    })
+    
+    if(found1) {
+      startY += 1;
+      startX -= 1;
+      console.log('found1')
+    }
+    
+    let found2 = coloredArray.find(item => {
+      return item.y === startY + 1 && item.x === startX - 1;
+    })
+    
+    if(found2) {
+      startY += 1;
+      startX -= 1;
+      console.log('found2')
+    }
+
+    let found3 = coloredArray.find(item => {
+      return item.y === startY + 1 && item.x === startX - 1;
+    })
+    
+    if(found3) {
+      startY += 1;
+      startX -= 1;
+      console.log('found2')
+      result = true;
+    }
+    return result;
+  }
+
 
   checkWinningLignsColumns(lignCol: number, coloredArray: TokenData[], isLign: boolean) {
 
@@ -89,6 +129,7 @@ export class AppComponent {
  
   winningLign = []
   winningColumn = []
+  winningCrosses: boolean;
 
   circleData(color: string, y: number, x: number) {
 
@@ -113,20 +154,37 @@ export class AppComponent {
       this.addedRedTokens = this.addedTokens.filter(item => item.color === 'red');
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
-      for(let i = 1; i <= 7; i++) {
-       this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
-       //console.log(this.winningLign)
-       this.winningLign ? this.hasWon = true : false;
-      }
+      // for(let i = 1; i <= 7; i++) {
+      //  this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
+      //  //console.log(this.winningLign)
+      //  this.winningLign ? this.hasWon = true : false;
+      // }
 
-      for(let i = 1; i <= 6; i++) {
-        this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
-        //console.log(this.winningLign)
-        this.winningColumn ? this.hasWon = true : false;
+      // for(let i = 1; i <= 6; i++) {
+      //   this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
+      //   //console.log(this.winningLign)
+      //   this.winningColumn ? this.hasWon = true : false;
+      //  }
+
+       //////////////////////////////////////////////////
+
+       for(let i = 0; i <= this[fieldName].length; i++) {
+        // let result1 = this.checkWinningCrossesRight(i, 3, this[fieldName]);
+        // let result2 = this.checkWinningCrossesRight(i, 4, this[fieldName]);
+        // let result3 = this.checkWinningCrossesRight(i, 5, this[fieldName]);
+        let result = this.checkWinningCrosses(this[fieldName], this[fieldName][i]);
+        console.log(result)
+        result ? this.hasWonC = true : false;
+       }
+
+       for(let i = 7; i >= 1; i--) {
+        //let result5 = this.checkWinningCrossesRight(this[fieldName]);
+        //console.log(result5)
+        //result5 ? this.hasWonC = true : false;
        }
       
 
-      //console.log(this.addedRedTokens)
+      console.log(this.addedRedTokens)
     }
 
 
