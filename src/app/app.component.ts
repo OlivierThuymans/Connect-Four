@@ -33,7 +33,6 @@ export class AppComponent {
   }
 
   circleColor(y: number, x: number) {
-    //console.log(y + 1, x + 1)
     let color: string;
     let currentCircle = this.addedTokens.find(item => item.y === y + 1 && item.x === x + 1)
     !currentCircle ? color = 'e' : currentCircle.color === 'red' ? color = 'red' : currentCircle.color === 'yellow' ? color = 'yellow' : null;
@@ -61,39 +60,32 @@ export class AppComponent {
   hasWon: boolean = false;
   hasWonC: boolean = false;
 
-  checkWinningCrosses(coloredArray: TokenData[], startTarget: TokenData) {
+  checkWinningCrosses(coloredArray: TokenData[], startTarget: TokenData, way: string) {
     let startY = startTarget?.y
     let startX = startTarget?.x
     let result: boolean;
 
     let found1 = coloredArray.find(item => {
-      return item.y === startY + 1 && item.x === startX - 1;
+      return item.y === startY + 1 && item.x === (way === 'up' ? startX - 1 : startX + 1);
     })
     
     if(found1) {
       startY += 1;
-      startX -= 1;
-      console.log('found1')
+      way === 'up' ? startX -= 1 : startX += 1;
     }
-    
     let found2 = coloredArray.find(item => {
-      return item.y === startY + 1 && item.x === startX - 1;
+      return item.y === startY + 1 && item.x === (way === 'up' ? startX - 1 : startX + 1);
     })
-    
     if(found2) {
       startY += 1;
-      startX -= 1;
-      console.log('found2')
+      way === 'up' ? startX -= 1 : startX += 1;
     }
-
     let found3 = coloredArray.find(item => {
-      return item.y === startY + 1 && item.x === startX - 1;
+      return item.y === startY + 1 && item.x === (way === 'up' ? startX - 1 : startX + 1);
     })
-    
     if(found3) {
       startY += 1;
-      startX -= 1;
-      console.log('found2')
+      way === 'up' ? startX -= 1 : startX += 1;
       result = true;
     }
     return result;
@@ -101,7 +93,6 @@ export class AppComponent {
 
 
   checkWinningLignsColumns(lignCol: number, coloredArray: TokenData[], isLign: boolean) {
-
     let xToY = isLign ? 'x' : 'y';
     let yToX = isLign ? 'y' : 'x';
 
@@ -129,16 +120,11 @@ export class AppComponent {
  
   winningLign = []
   winningColumn = []
-  winningCrosses: boolean;
 
   circleData(color: string, y: number, x: number) {
-
     const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
 
     let col = y + 1;
-    let lign = x + 1;
-
-    //console.log(col, lign)
     
     this.findX(col);
 
@@ -154,42 +140,21 @@ export class AppComponent {
       this.addedRedTokens = this.addedTokens.filter(item => item.color === 'red');
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
-      // for(let i = 1; i <= 7; i++) {
-      //  this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
-      //  //console.log(this.winningLign)
-      //  this.winningLign ? this.hasWon = true : false;
-      // }
+      for(let i = 1; i <= 7; i++) {
+       this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
+       this.winningLign ? this.hasWon = true : false;
+      }
 
-      // for(let i = 1; i <= 6; i++) {
-      //   this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
-      //   //console.log(this.winningLign)
-      //   this.winningColumn ? this.hasWon = true : false;
-      //  }
-
-       //////////////////////////////////////////////////
-
-       for(let i = 0; i <= this[fieldName].length; i++) {
-        // let result1 = this.checkWinningCrossesRight(i, 3, this[fieldName]);
-        // let result2 = this.checkWinningCrossesRight(i, 4, this[fieldName]);
-        // let result3 = this.checkWinningCrossesRight(i, 5, this[fieldName]);
-        let result = this.checkWinningCrosses(this[fieldName], this[fieldName][i]);
-        console.log(result)
-        result ? this.hasWonC = true : false;
+      for(let i = 1; i <= 6; i++) {
+        this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
+        this.winningColumn ? this.hasWon = true : false;
        }
 
-       for(let i = 7; i >= 1; i--) {
-        //let result5 = this.checkWinningCrossesRight(this[fieldName]);
-        //console.log(result5)
-        //result5 ? this.hasWonC = true : false;
-       }
-      
-
-      console.log(this.addedRedTokens)
+      for(let i = 0; i <= this[fieldName].length; i++) {
+      let result = this.checkWinningCrosses(this[fieldName], this[fieldName][i], 'up');
+      let result2 = this.checkWinningCrosses(this[fieldName], this[fieldName][i], 'down');
+      result || result2 ? this.hasWonC = true : false;
+      }
     }
-
-
   }
-
-  
-
 }
