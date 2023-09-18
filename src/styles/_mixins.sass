@@ -1,0 +1,23 @@
+@mixin mobile-xs
+  @media screen and (max-width: 320px)
+    @content
+  
+@mixin mobile 
+  @media screen and (max-width: 767px)
+    @content
+
+@mixin tablet
+  @media screen and (min-width: 768px) and (max-width: 1023px)
+    @content
+
+@mixin desktop
+  @media screen and (min-width: 1024px)
+    @content
+
+@mixin desktop-xl
+  @media screen and (min-width: 1920px)
+    @content
+
+  
+
+    

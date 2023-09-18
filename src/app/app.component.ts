@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TokenData } from './interfaces';
-import { Token } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -8,37 +7,38 @@ import { Token } from '@angular/compiler';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-
   ligns = new Array(6);
   columns = new Array(7);
-
   addedTokens: TokenData[] = [];
   addedRedTokens: TokenData[] = [];
   addedYellowTokens: TokenData[] = [];
-
   selectedToken: string = '';
   x!: number;
   y!: number;
+  winningLign = [];
+  winningColumn = [];
+  hasWon: boolean = false;
+  hasWonC: boolean = false;
+  isModalOpen: boolean;
 
   column(value: number) {
     this.y = value + 1;
-  }
+  };
 
   lign(value: number) {
     this.x = value + 1;
-  }
+  };
 
   tokenSelection(color: string) {
     this.selectedToken = color;
-  }
+  };
 
   circleColor(y: number, x: number) {
     let color: string;
     let currentCircle = this.addedTokens.find(item => item.y === y + 1 && item.x === x + 1)
     !currentCircle ? color = 'e' : currentCircle.color === 'red' ? color = 'red' : currentCircle.color === 'yellow' ? color = 'yellow' : null;
     return color;
-  }
-
+  };
 
   findX(col: number) {
     let number: number = 6;
@@ -54,11 +54,7 @@ export class AppComponent {
       }
     }
     return number;
-  }
-
-
-  hasWon: boolean = false;
-  hasWonC: boolean = false;
+  };
 
   checkWinningCrosses(coloredArray: TokenData[], startTarget: TokenData, way: string) {
     let startY = startTarget?.y
@@ -89,8 +85,7 @@ export class AppComponent {
       result = true;
     }
     return result;
-  }
-
+  };
 
   checkWinningLignsColumns(lignCol: number, coloredArray: TokenData[], isLign: boolean) {
     let xToY = isLign ? 'x' : 'y';
@@ -117,9 +112,6 @@ export class AppComponent {
     })
     return result;
   };
- 
-  winningLign = []
-  winningColumn = []
 
   circleData(color: string, y: number, x: number) {
     const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
@@ -140,21 +132,29 @@ export class AppComponent {
       this.addedRedTokens = this.addedTokens.filter(item => item.color === 'red');
       this.addedYellowTokens = this.addedTokens.filter(item => item.color === 'yellow');
 
-      for(let i = 1; i <= 7; i++) {
+      for(let i = 1; i <= 6; i++) {
        this.winningLign = this.checkWinningLignsColumns(i, this[fieldName], true)
        this.winningLign ? this.hasWon = true : false;
+       this.winningLign ? this.isModalOpen = true : false;
       }
 
-      for(let i = 1; i <= 6; i++) {
+      for(let i = 1; i <= 7; i++) {
         this.winningColumn = this.checkWinningLignsColumns(i, this[fieldName], false)
         this.winningColumn ? this.hasWon = true : false;
+        this.winningColumn ? this.isModalOpen = true : false;
        }
 
       for(let i = 0; i <= this[fieldName].length; i++) {
       let result = this.checkWinningCrosses(this[fieldName], this[fieldName][i], 'up');
       let result2 = this.checkWinningCrosses(this[fieldName], this[fieldName][i], 'down');
       result || result2 ? this.hasWonC = true : false;
+      result || result2 ? this.isModalOpen = true : false;
       }
     }
+  };
+
+  handleModal() {
+    this.isModalOpen = false;
+    this.addedTokens = [];
   }
-}
+};
