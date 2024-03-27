@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, Renderer2, ElementRef } from '@angular/core';
 import { TokenData } from './interfaces';
 
 @Component({
@@ -7,6 +7,11 @@ import { TokenData } from './interfaces';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
+
+  constructor(private re: Renderer2) {}
+
+  @ViewChild('token') token: ElementRef;
+
   ligns = new Array(6);
   columns = new Array(7);
   addedTokens: TokenData[] = [];
@@ -20,6 +25,13 @@ export class AppComponent {
   hasWon: boolean = false;
   hasWonC: boolean = false;
   isModalOpen: boolean;
+  startModalOpen: boolean = true;
+  tokenRotateClassAdded: boolean = false;
+
+  setSelectedToken(color: string) {
+    this.selectedToken = color;
+    this.startModalOpen = false;
+  }
 
   column(value: number) {
     this.y = value + 1;
@@ -114,6 +126,12 @@ export class AppComponent {
   };
 
   circleData(color: string, y: number, x: number) {
+    
+    !this.tokenRotateClassAdded ? this.re.addClass(this.token.nativeElement, 'rotate') : this.tokenRotateClassAdded ? this.re.removeClass(this.token.nativeElement, 'rotate') : null;
+    this.tokenRotateClassAdded = !this.tokenRotateClassAdded;
+    
+    this.selectedToken === 'red' ? this.selectedToken = 'yellow' : this.selectedToken === 'yellow' ? this.selectedToken = 'red' : null;
+
     const fieldName = `added${color.charAt(0).toUpperCase() + color.slice(1)}Tokens`;
 
     let col = y + 1;
@@ -155,6 +173,7 @@ export class AppComponent {
 
   handleModal() {
     this.isModalOpen = false;
+    this.startModalOpen = true;
     this.addedTokens = [];
   }
 };
